@@ -1,8 +1,8 @@
 package cleancode.studycafe.tobe.io;
 
-import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
-import cleancode.studycafe.tobe.model.StudyCafePass;
-import cleancode.studycafe.tobe.model.StudyCafePassType;
+import cleancode.studycafe.tobe.model.pass.locker.StudyCafeLockerPass;
+import cleancode.studycafe.tobe.model.pass.StudyCafeSeatPass;
+import cleancode.studycafe.tobe.model.pass.StudyCafePassType;
 
 import java.util.List;
 
@@ -21,27 +21,12 @@ public class StudyCafeIOHandler {
         System.out.println();
     }
 
-    public void showPassOrderSummary(StudyCafePass selectedPass) {
-        this.showPassOrderSummary(selectedPass, null);
+    public void showPassOrderSummary(StudyCafeSeatPass selectedPass, StudyCafeLockerPass lockerPass) {
+        outputHandler.showPassOrderSummary(selectedPass, lockerPass);
     }
 
-    public void showPassOrderSummary(StudyCafePass selectedPass, StudyCafeLockerPass lockerPass) {
-        System.out.println();
-        System.out.println("이용 내역");
-        System.out.println("이용권: " + selectedPass.display());
-        if (lockerPass != null) {
-            System.out.println("사물함: " + lockerPass.display());
-        }
-
-        double discountRate = selectedPass.getDiscountRate();
-        int discountPrice = (int) (selectedPass.getPrice() * discountRate);
-        if (discountPrice > 0) {
-            System.out.println("이벤트 할인 금액: " + discountPrice + "원");
-        }
-
-        int totalPrice = selectedPass.getPrice() - discountPrice + (lockerPass != null ? lockerPass.getPrice() : 0);
-        System.out.println("총 결제 금액: " + totalPrice + "원");
-        System.out.println();
+    public void showPassOrderSummary(StudyCafeSeatPass selectedPass) {
+        outputHandler.showPassOrderSummary(selectedPass);
     }
 
     public void showSimpleMessage(String message) {
@@ -53,7 +38,7 @@ public class StudyCafeIOHandler {
         return inputHandler.getPassTypeSelectingUserAction();
     }
 
-    public StudyCafePass askPassSelecting(List<StudyCafePass> passCandidates) {
+    public StudyCafeSeatPass askPassSelecting(List<StudyCafeSeatPass> passCandidates) {
         outputHandler.showPassListForSelection(passCandidates);
         return inputHandler.getSelectPass(passCandidates);
     }
