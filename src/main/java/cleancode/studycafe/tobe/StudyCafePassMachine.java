@@ -1,13 +1,13 @@
 package cleancode.studycafe.tobe;
 
 import cleancode.studycafe.tobe.exception.AppException;
-import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.io.PassReader;
 import cleancode.studycafe.tobe.io.StudyCafeIOHandler;
 import cleancode.studycafe.tobe.model.order.StudyCafePassOrder;
 import cleancode.studycafe.tobe.model.pass.StudyCafePass;
 import cleancode.studycafe.tobe.model.pass.StudyCafePassType;
-import cleancode.studycafe.tobe.model.pass.StudyCafePasses;
 import cleancode.studycafe.tobe.model.pass.StudyCafeSeatPass;
+import cleancode.studycafe.tobe.model.pass.StudyCafeSeatPasses;
 import cleancode.studycafe.tobe.model.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.model.pass.locker.StudyCafeLockerPasses;
 
@@ -18,7 +18,11 @@ public class StudyCafePassMachine {
 
     private final StudyCafeIOHandler ioHandler = new StudyCafeIOHandler();
 
-    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
+    private final PassReader passReader;
+
+    public StudyCafePassMachine(PassReader passReader) {
+        this.passReader = passReader;
+    }
 
     public void run() {
         try {
@@ -45,7 +49,9 @@ public class StudyCafePassMachine {
     }
 
     private List<StudyCafeSeatPass> findPassCandidatesBy(StudyCafePassType studyCafePassType) {
-        StudyCafePasses allPasses = studyCafeFileHandler.readStudyCafePasses();
+        // 1. 어떤 데이터를 필요로 하는가
+        // 2. 데이터를 어디로부터 어떻게 가져올 것인가
+        StudyCafeSeatPasses allPasses = passReader.readSeatPasses();
         return allPasses.findPassBy(studyCafePassType);
     }
 
@@ -69,7 +75,7 @@ public class StudyCafePassMachine {
     }
 
     private Optional<StudyCafeLockerPass> findLockerPassCandidateBy(StudyCafePass pass) {
-        StudyCafeLockerPasses allLockerPasses = studyCafeFileHandler.readLockerPasses();
+        StudyCafeLockerPasses allLockerPasses = passReader.readLockerPasses();
         return allLockerPasses.findLockerPassBy(pass);
     }
 
